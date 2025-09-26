@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  sdmapi:
+    build: .
+    container_name: sdmapi
+    restart: unless-stopped
+    command: ["node", "sdmapi.js", "--daemon"]
+    environment:
+      - NODE_ENV=production
+    # If you want logs persisted, uncomment below to mount a host directory
+    # volumes:
+    #   - ./logs:/app/logs
