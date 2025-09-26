@@ -1,11 +1,13 @@
-FROM node:18-alpine
+FROM node:22-alpine
 
 # Set workdir
 WORKDIR /app
 
 # Install dependencies
-COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev || npm i --omit=dev
+COPY package.json pnpm-lock.yaml* ./
+# Enable corepack for pnpm and install deps using the lockfile
+RUN corepack enable \
+  && pnpm install --frozen-lockfile --prod
 
 # Copy source
 COPY sdmapi.js ./
