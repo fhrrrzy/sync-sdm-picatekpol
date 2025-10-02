@@ -8,11 +8,16 @@ import { hideBin } from 'yargs/helpers';
 
 // Koneksi ke MySQL
 const dbConfig = {
-  host: '103.152.5.77',
+  // host: '103.152.5.77',
+  // user: 'u344419611_picatekpol',
+  // password: 'Picatekpol2024!@#',
+  // database: 'u344419611_picatekpol',
+  // port: '13036',
+  host: '153.92.15.31',
   user: 'u344419611_picatekpol',
-  password: 'Picatekpol2024!@#',
+  password: 'Picatekpol2024',
   database: 'u344419611_picatekpol',
-  port: '13036',
+  port: '3306',
   connectTimeout: 20000
 };
 
@@ -62,15 +67,6 @@ async function executeSinkronisasiKehadiran(tglAwal, tglAkhir) {
         if (cekPpis.length > 0) kode_unit_unik = `X-${row.kode_unit_kerja_sap}`;
 
         await conn.query(
-          `DELETE FROM sdm_kehadiran 
-            WHERE nik_sap = ? 
-            AND tanggal_presensi = ? 
-            AND CONVERT_TZ(updated_at, '+00:00', '+07:00') < (CONVERT_TZ(NOW(), '+00:00', '+07:00') - INTERVAL 3 HOUR);
-        `,
-          [row.nik_sap, row.tanggal_presensi]
-        );
-
-        await conn.query(
           `INSERT INTO sdm_kehadiran (
             perusahaan, nama_regional, kode_unit_kerja_sap, nama_unit_kerja, bagian_divisi,
             nik_sap, nama, jabatan, tanggal_presensi, waktu_check_in, waktu_check_out,
@@ -108,7 +104,6 @@ async function executeSinkronisasiKehadiran(tglAwal, tglAkhir) {
     }
 
     const endTime = new Date();
-    console.log('\n✅ Sinkronisasi selesai');
     return { success: true, startTime, endTime, total: data.length, sukses, gagal };
 
   } catch (err) {
